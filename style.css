@@ -6,6 +6,7 @@
     --color-button-hover: #e55720;
     --color-text: #444444;
     --color-white: #FFFFFF;
+    --color-parrafo: #444444;
 }
 
 /* Estilos generales */
@@ -70,6 +71,15 @@ body {
     text-align: center;
 }
 
+p {
+    font-family: "Inter", serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--color-parrafo);
+    margin: 10px 0;
+    text-align: center;    
+}
+
 /* Contenedores de entrada y botón */
 .input-wrapper {
     display: flex;
@@ -87,42 +97,41 @@ body {
     font-size: 16px;
 }
 
-.button-container {
-    width: 300px;
-    justify-content: center;
-}
-
-/* Estilos de entrada de texto */
-.input-title {
-    flex: 1;
-    padding: 10px 15px;
-    font-size: 16px;
-    border: 2px solid #333;
-    border-right: none;
-    border-radius: 25px 0 0 25px;
-    font-family: "Merriweather", serif;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
-
-/* Estilos de botón */
-button {
-    padding: 15px 30px;
-    font-family: "Inter", sans-serif;
-    font-size: 16px;
-    border: 2px solid #000;
-    border-radius: 25px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    cursor: pointer;
-}
-
+/* Botón de añadir */
 .button-add {
     background-color: var(--color-tertiary);
     color: var(--color-text);
     border-radius: 0 25px 25px 0;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: 2px solid #000;
+    cursor: pointer;
 }
 
 .button-add:hover {
     background-color: #a1a1a1;
+}
+
+/* Botón de sorteo */
+.button-draw {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 10px 40px;
+    color: var(--color-white);
+    background-color: var(--color-button);
+    font-size: 16px;
+    border-radius: 25px;
+    cursor: pointer;
+    border: none;
+}
+
+.button-draw img {
+    margin-right: 10px;
+}
+
+.button-draw:hover {
+    background-color: var(--color-button-hover);
 }
 
 /* Listas */
@@ -142,21 +151,89 @@ ul {
     text-align: center;
 }
 
-/* Botón de sortear título */
-.button-draw {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    padding: 10px 40px;
-    color: var(--color-white);
-    background-color: var(--color-button);
-    font-size: 16px;
+/* Sección de sorteo */
+.sortear-container {
+    margin-top: 20px;
+    text-align: center;
 }
 
-.button-draw img {
-    margin-right: 40px;
+.sortear-container.hidden {
+    display: none;
 }
 
-.button-draw:hover {
-    background-color: var(--color-button-hover);
+.input-name.small {
+    width: 80%;
+    max-width: 300px;
+}
+
+/* Mensaje de sorteo */
+#faltanSortear {
+    font-size: 20px;
+    color: #FF5722;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* Estilo del efecto sorpresa */
+.secreto {
+    font-size: 22px;
+    font-weight: bold;
+    color: #FF5722;
+    animation: fadeIn 3s ease-in-out;
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Para ocultar elementos dinámicamente */
+.hidden {
+    display: none;
+}
+
+/* Animación para el título (latido) */
+@keyframes latido {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.main-title {
+    animation: latido 1.5s infinite;
+}
+
+/* Animación de suspenso para el mensaje del sorteo */
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.5); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.secreto {
+    font-size: 24px;
+    font-weight: bold;
+    color: #ff5722;
+    text-align: center;
+    margin-top: 20px;
+    animation: fadeIn 1s ease-in-out;
+}
+
+/* Efecto de parpadeo cuando se muestra el mensaje */
+@keyframes blink {
+    0% { opacity: 0; }
+    50% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+.suspenso {
+    font-size: 20px;
+    font-weight: bold;
+    color: #222;
+    text-align: center;
+    animation: blink 1.5s ease-in-out 3;
 }
