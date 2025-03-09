@@ -21,7 +21,7 @@
             <h2 class="section-title">Ingrese los nombres de los participantes</h2>
             <p id="totalParticipantes">Total de participantes: 0</p>
             
-            <div class="input-wrapper">
+            <div class="input-wrapper" id="nombreIngresoContainer">
                 <input type="text" id="amigo" class="input-name" placeholder="Escribe un nombre">
                 <button class="button-add" onclick="agregarAmigo()">Añadir</button>
             </div>
@@ -44,6 +44,7 @@
             <div id="resultado" class="result-container hidden">
                 <p id="mensajeSorpresa">🎭 Tu amigo secreto es...</p>
                 <p id="nombreSorteado" class="hidden"></p>
+                <button id="reiniciarJuego" class="button-reset hidden" onclick="reiniciarJuego()">🔄 Reiniciar Juego</button>
             </div>
         </section>
     </main>

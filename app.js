@@ -7,8 +7,9 @@ document.getElementById('amigo').addEventListener('keypress', function(event) {
     }
 });
 
-document.getElementById('nombreSorteo').addEventListener('keypress', function(event) {
+document.getElementById('nombreSorteo').addEventListener('keydown', function(event) {
     if (event.key === 'Enter') {
+        event.preventDefault(); // Soluciona el problema de tabulación
         sortearAmigo();
     }
 });
@@ -19,7 +20,7 @@ function agregarAmigo() {
 
     if (nombre !== '') {
         let nombreFormateado = formatearNombre(nombre);
-        
+
         if (!nombreAmigos.includes(nombreFormateado)) {
             nombreAmigos.push(nombreFormateado);
             actualizarLista();
@@ -50,32 +51,60 @@ function mostrarCajaSortear() {
         return;
     }
     document.getElementById('sortearAmigoContainer').classList.remove('hidden');
+    document.getElementById('nombreIngresoContainer').classList.add('hidden'); // Oculta la caja de ingreso
 }
 
 function sortearAmigo() {
     let nombreSorteo = document.getElementById('nombreSorteo').value.trim();
-    let nombreFormateado = formatearNombre(nombreSorteo);
+    let nombreFormateado = formatearNombre(nombreSorteo);  // Asegurarse de que el nombre ingresado esté correctamente formateado
 
     if (!nombreSorteo || !nombreAmigos.includes(nombreFormateado)) {
         alert('Ingresa un nombre válido que esté en la lista.');
         return;
     }
 
-    let disponibles = nombreAmigos.filter(nombre => nombre !== nombreFormateado && !nombresSorteados.includes(nombre));
-
-    if (disponibles.length === 0) {
-        alert('Todos los amigos han sido sorteados.');
+    // Verificar si todos los participantes han sido sorteados
+    if (nombresSorteados.length === nombreAmigos.length) {
+        alert('🎉 Todos los amigos ya han sido sorteados. No puedes seguir sorteando.');
         return;
     }
 
-    let indiceAleatorio = Math.floor(Math.random() * disponibles.length);
-    let amigoSorteado = disponibles[indiceAleatorio];
+    let asignaciones = {}; 
+    let disponibles = [...nombreAmigos];  // Lista de nombres disponibles para asignar
 
-    nombresSorteados.push(amigoSorteado);
-    document.getElementById('nombreSorteo').value = ''; // Limpia el campo de sorteo
+    // Evitar asignar a los jugadores ya sorteados y a sí mismos
+    for (let nombre of nombreAmigos) {
+        // Filtrar las opciones disponibles para el sorteo
+        let opciones = disponibles.filter(n => n !== nombre && !Object.values(asignaciones).includes(n));
 
-    mostrarResultado(amigoSorteado);
-    actualizarEstadoSorteo();
+        // Si no hay opciones disponibles, significa que algo salió mal
+        if (opciones.length === 0) {
+            alert('Error en el sorteo. Intenta de nuevo.');
+            return;
+        }
+
+        // Elegir aleatoriamente entre las opciones disponibles
+        let indiceAleatorio = Math.floor(Math.random() * opciones.length);
+        let amigoSorteado = opciones[indiceAleatorio];
+
+        // Asignar el amigo sorteado
+        asignaciones[nombre] = amigoSorteado;
+        disponibles = disponibles.filter(n => n !== amigoSorteado);  // Eliminar el amigo sorteado de la lista de opciones
+    }
+
+    // Verificar que todo el proceso fue exitoso
+    if (Object.keys(asignaciones).length === nombreAmigos.length) {
+        let amigoAsignado = asignaciones[nombreFormateado];  // Obtener el amigo asignado al jugador que hizo el sorteo
+        nombresSorteados.push(amigoAsignado);  // Agregar al historial de sorteados
+        document.getElementById('nombreSorteo').value = '';  // Limpiar el campo de texto
+
+        // Mostrar el resultado en pantalla
+        mostrarResultado(amigoAsignado);
+        console.log('Nombres sorteados hasta ahora:', nombresSorteados);  // Ver en consola los nombres sorteados
+        actualizarEstadoSorteo();  // Actualizar el estado del sorteo
+    } else {
+        alert('Hubo un error en el sorteo. Por favor, intenta de nuevo.');
+    }
 }
 
 function actualizarEstadoSorteo() {
@@ -85,6 +114,10 @@ function actualizarEstadoSorteo() {
     let faltanSortearElemento = document.getElementById('faltanSortear');
     faltanSortearElemento.textContent = mensaje;
     faltanSortearElemento.classList.remove('hidden');
+
+    if (faltan === 0) {
+        document.getElementById('reiniciarJuego').classList.remove('hidden');
+    }
 }
 
 function mostrarResultado(nombre) {
@@ -92,7 +125,7 @@ function mostrarResultado(nombre) {
     let mensajeSorpresa = document.getElementById('mensajeSorpresa');
     let nombreSorteado = document.getElementById('nombreSorteado');
 
-    resultadoContainer.classList.remove('hidden'); // Muestra el contenedor del resultado
+    resultadoContainer.classList.remove('hidden');
     mensajeSorpresa.textContent = "🎭 Tu amigo secreto es...";
     mensajeSorpresa.classList.remove('hidden');
     nombreSorteado.classList.add('hidden');
@@ -106,4 +139,24 @@ function mostrarResultado(nombre) {
 
 function formatearNombre(nombre) {
     return nombre.charAt(0).toUpperCase() + nombre.slice(1).toLowerCase();
+}
+
+function reiniciarJuego() {
+    nombreAmigos = [];
+    nombresSorteados = [];
+
+    document.getElementById('listaAmigos').innerHTML = '';
+    document.getElementById('totalParticipantes').textContent = "Total de participantes: 0";
+    document.getElementById('nombreSorteo').value = '';
+    
+    document.getElementById('resultado').classList.add('hidden');
+    document.getElementById('nombreSorteado').classList.add('hidden');
+    document.getElementById('mensajeSorpresa').classList.add('hidden');
+    document.getElementById('reiniciarJuego').classList.add('hidden');
+    document.getElementById('faltanSortear').classList.add('hidden');
+
+    document.getElementById('sortearAmigoContainer').classList.add('hidden');
+    document.getElementById('nombreIngresoContainer').classList.remove('hidden'); // Vuelve a mostrar el ingreso de nombres
+
+    alert("🎉 ¡El juego ha sido reiniciado! 🎉");
 }

@@ -237,3 +237,18 @@ ul {
     text-align: center;
     animation: blink 1.5s ease-in-out 3;
 }
+
+.button-reset {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 18px;
+    background-color: var(--color-button);
+    color: var(--color-white);
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+}
+
+.button-reset:hover {
+    background-color: var(--color-button-hover);
+}
